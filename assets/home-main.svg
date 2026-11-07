@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 584.46 1172.11">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-3 {
+        letter-spacing: .2em;
+      }
+
+      .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        fill: #8b6f55;
+      }
+
+      .cls-3, .cls-5, .cls-7, .cls-8 {
+        font-family: ZenMaruGothic-Medium, 'Zen Maru Gothic';
+        font-weight: 500;
+      }
+
+      .cls-3, .cls-7 {
+        font-size: 30px;
+      }
+
+      .cls-4, .cls-5, .cls-9 {
+        font-size: 25px;
+      }
+
+      .cls-4, .cls-9 {
+        font-family: ZenMaruGothic-Regular, 'Zen Maru Gothic';
+      }
+
+      .cls-9, .cls-10, .cls-8 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke: #f4eee5;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-11 {
+        letter-spacing: -.5em;
+      }
+
+      .cls-8 {
+        font-size: 20px;
+      }
+    </style>
+  </defs>
+  <g id="_固定オブジェクト" data-name="固定オブジェクト">
+    <rect class="cls-10" y="828.57" width="584.46" height="343.54" rx="49.69" ry="49.69"/>
+    <text class="cls-4" transform="translate(198.48 915.49)"><tspan x="0" y="0">感情を記録して</tspan><tspan class="cls-11" x="175" y="0">、</tspan><tspan x="-50" y="43.75">日記を書いてみましょう</tspan><tspan class="cls-11" x="225" y="43.75">。</tspan></text>
+    <rect class="cls-10" y="442.62" width="584.46" height="343.54" rx="49.69" ry="49.69"/>
+    <text class="cls-7" transform="translate(67.87 497.56)"><tspan x="0" y="0">過去の日記を振り返る</tspan></text>
+  </g>
+  <g id="_記録ボタン" data-name="記録ボタン">
+    <rect class="cls-6" x="67.69" y="1036.01" width="449.07" height="63.41" rx="31.7" ry="31.7"/>
+    <text class="cls-9" transform="translate(217.2286 1078.1745)"><tspan x="0" y="0">＋日記を書く</tspan></text>
+  </g>
+  <g id="_感情バーを見るボタン" data-name="感情バーを見るボタン">
+    <rect class="cls-6" x="282.19" y="695.37" width="235.04" height="43.8" rx="21.9" ry="21.9"/>
+    <text class="cls-8" transform="translate(329.71 724)"><tspan x="0" y="0">感情バーを見る</tspan></text>
+  </g>
+  <g id="_続きを読む" data-name="続きを読む">
+    <rect class="cls-6" x="282.19" y="695.37" width="235.04" height="43.8" rx="21.9" ry="21.9"/>
+    <text class="cls-8" transform="translate(349.71 724)"><tspan x="0" y="0">続きを読む</tspan></text>
+  </g>
+  <g id="_振り返り日付" data-name="振り返り日付">
+    <text class="cls-5" transform="translate(107.21 726.77)"><tspan x="0" y="0">2026.10.02</tspan></text>
+  </g>
+  <g id="_今日の日付" data-name="今日の日付">
+    <text class="cls-3" transform="translate(202.8 26.4)"><tspan x="0" y="0">2026.10.15</tspan></text>
+  </g>
+  <g id="_マーク位置_振り返り_" data-name="マーク位置(振り返り)">
+    <rect class="cls-1" x="68.16" y="534.46" width="164.85" height="164.85"/>
+  </g>
+  <g id="_マーク位置_画面上部_" data-name="マーク位置（画面上部）">
+    <rect class="cls-1" x="165.74" y="82.71" width="252.97" height="252.97"/>
+  </g>
+  <g id="_テキストボックス" data-name="テキストボックス">
+    <text/>
+    <rect class="cls-2" x="245.73" y="534.46" width="271.03" height="136.92" rx="12" ry="12"/>
+  </g>
+</svg>

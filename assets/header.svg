@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_メニュー" data-name="メニュー" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.33 36.96">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #8b6f55;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 3px;
+      }
+    </style>
+  </defs>
+  <line class="cls-1" x1="1.5" y1="1.5" x2="49.83" y2="1.5"/>
+  <line class="cls-1" x1="1.5" y1="18.48" x2="49.83" y2="18.48"/>
+  <line class="cls-1" x1="1.5" y1="35.46" x2="49.83" y2="35.46"/>
+</svg>
