@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>日記 - カレンダー</title>
+
+<!-- メニューオーバーレイの設定 -->
+<link rel="stylesheet" href="menu.css">
+<script src="menu.js" defer></script>
+
+<!-- Google Fonts：Zen Maru Gothicを読み込む -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #f4eee5;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  color: #8b6f55;
+}
+
+/* アプリ全体のフレックスレイアウト（ホーム画面と完全同一） */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  background: #f4eee5;
+}
+
+/* ヘッダー領域（ホーム画面 index.html と完全統一） */
+header {
+  height: 70px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+  width: 100%;
+}
+
+/* メニュー：index.html と同じ 36px 基準 */
+.header-menu-svg {
+  height: 36px;
+  width: auto;
+  cursor: pointer;
+  display: block;
+}
+
+/* 月選択ボタン（右側コンテナ） */
+.header-month-container {
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.header-month-svg {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+/* 月選択プルダウン（ボタンの上にピッタリ重ねる） */
+.month-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 2;
+}
+
+/* メインコンテンツ・カレンダー一覧 */
+main {
+  flex: 1;
+  width: 100%;
+  padding: 0 16px 40px;
+}
+
+.calendar-list {
+  width: 100%;
+}
+
+.month-calendar {
+  width: 100%;
+  margin: 0 auto 24px;
+}
+
+.month-calendar svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* 日付文字 */
+.date-number {
+  font-family: "Zen Maru Gothic", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  fill: #8b6f55;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.date-number.sunday {
+  fill: #eb8885;
+}
+
+.date-number.saturday {
+  fill: #036eb6;
+}
+
+/* マーク類 */
+.emotion-image, .text-mark {
+  pointer-events: none;
+}
+
+svg [role="button"], .interactive-btn {
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <!-- ヘッダー（ホーム画面と完全統一したCSS構造） -->
+  <header>
+    <!-- メニュー：index.html と全く同じSVG・ViewBox -->
+    <svg class="header-menu-svg" viewBox="30 70 70 60" xmlns="http://www.w3.org/2000/svg">
+      <g id="_メニュー" data-name="メニュー" role="button" aria-label="メニュー">
+        <!-- 当たり判定領域 -->
+        <rect fill="transparent" x="30" y="70" width="70" height="60"/>
+        <line stroke="#8b6f55" stroke-width="3" stroke-linecap="round" stroke-miterlimit="10" fill="none" x1="40" y1="84.22" x2="88.33" y2="84.22"/>
+        <line stroke="#8b6f55" stroke-width="3" stroke-linecap="round" stroke-miterlimit="10" fill="none" x1="40" y1="101.2" x2="88.33" y2="101.2"/>
+        <line stroke="#8b6f55" stroke-width="3" stroke-linecap="round" stroke-miterlimit="10" fill="none" x1="40" y1="118.18" x2="88.33" y2="118.18"/>
+      </g>
+    </svg>
+
+    <!-- 月選択ボタン（右側配置） -->
+    <div class="header-month-container">
+      <svg id="headerSvg" class="header-month-svg" viewBox="470 0 117.28 36.96" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .header-month-white {
+              fill: #fff;
+              font-family: "Zen Maru Gothic", sans-serif;
+              font-size: 25px;
+              font-weight: 500;
+            }
+          </style>
+        </defs>
+        <g id="_月選択ボタン" data-name="月選択ボタン">
+          <rect fill="#8b6f55" x="470.68" y="2.84" width="117.28" height="31.29" rx="15.64" ry="15.64"/>
+          <text id="headerMonthText" class="header-month-white" x="488.07" y="26.73">2026.11</text>
+          <polyline points="565.55 17.83 570.39 22.67 575.23 17.83" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </g>
+      </svg>
+
+      <!-- 月選択プルダウン -->
+      <select id="monthSelect" class="month-select" aria-label="表示する月を選択"></select>
+    </div>
+  </header>
+
+  <!-- カレンダー一覧 -->
+  <main id="calendarList" class="calendar-list"></main>
+
+</div>
+
+<!-- カレンダーSVGのテンプレート -->
+<template id="calendarTemplate">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.96 773.13">
+  <defs>
+    <style>
+      .cls-1, .cls-2 { fill: none; }
+      .cls-3 { fill: #fff; font-size: 25px; }
+      .cls-3, .cls-4, .cls-5 { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 500; }
+      .cls-6 { fill: #eb8885; font-family: 'Zen Maru Gothic', sans-serif; font-size: 16.41px; }
+      .cls-7 { fill: #8b6f55; font-family: 'Zen Maru Gothic', sans-serif; font-size: 16.41px; }
+      .cls-8 { fill: #036eb6; font-family: 'Zen Maru Gothic', sans-serif; font-size: 16.41px; }
+      .cls-4, .cls-5 { fill: #8b6f55; }
+      .cls-10 { letter-spacing: .25em; }
+      .cls-11 { fill: #adc885; }
+      .cls-5 { font-size: 30px; }
+      .cls-2 { stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
+      .cls-12 { letter-spacing: -.02em; }
+      .cls-13 { letter-spacing: -.01em; }
+    </style>
+  </defs>
+
+  <!-- 文字日記マーク -->
+  <g id="_文字日記マーク" data-name="文字日記マーク">
+    <path class="cls-11" d="M50.78,200.09c.23,6.76-6.93,9.14-11.63,8.01-.23-.07-.46-.16-.68-.24-3.35-1.32-5.67-4.17-5.67-7.48,0-3.94,3.29-7.24,7.7-8.06.23-.04.47-.08.71-.11,6.22-.86,10.99.33,9.72,7.26-.03.21-.09.42-.16.62Z"/>
+  </g>
+
+  <!-- 日付文字位置 -->
+  <g id="_日にち文字位置" data-name="日にち文字位置">
+    <rect class="cls-1" x="33.34" y="191.48" width="17.32" height="17.32"/>
+  </g>
+
+  <!-- 曜日 -->
+  <g id="_曜日文字_固定_" data-name="曜日文字(固定)">
+    <text class="cls-6" transform="translate(27.4 172.81)"><tspan x="0" y="0">Sun</tspan></text>
+    <text class="cls-7" transform="translate(110.16 172.81)"><tspan x="0" y="0">Mon</tspan></text>
+    <text class="cls-7" transform="translate(195.62 172.81)"><tspan class="cls-12" x="0" y="0">T</tspan><tspan x="8.58" y="0">ue</tspan></text>
+    <text class="cls-7" transform="translate(277.69 172.81)"><tspan class="cls-13" x="0" y="0">W</tspan><tspan x="14.73" y="0">ed</tspan></text>
+    <text class="cls-7" transform="translate(363.63 172.81)"><tspan x="0" y="0">Thu</tspan></text>
+    <text class="cls-7" transform="translate(450.96 172.81)"><tspan x="0" y="0">Fri</tspan></text>
+    <text class="cls-8" transform="translate(534.08 172.81)"><tspan x="0" y="0">Sat</tspan></text>
+  </g>
+
+  <!-- カレンダー枠ガイド -->
+  <g id="_カレンダー枠ガイド" data-name="カレンダー枠ガイド">
+    <rect class="cls-1" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="183.37" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="183.37" width="83.99" height="98.29"/>
+
+    <rect class="cls-1" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="281.67" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="281.67" width="83.99" height="98.29"/>
+
+    <rect class="cls-1" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="379.96" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="379.96" width="83.99" height="98.29"/>
+
+    <rect class="cls-1" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="478.25" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="478.25" width="83.99" height="98.29"/>
+
+    <rect class="cls-1" x="0" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="576.55" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="576.55" width="83.99" height="98.29"/>
+
+    <rect class="cls-1" x="0" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="83.99" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="167.99" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="251.98" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="335.98" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="419.97" y="674.84" width="83.99" height="98.29"/>
+    <rect class="cls-1" x="503.97" y="674.84" width="83.99" height="98.29"/>
+  </g>
+
+  <!-- マーク位置 -->
+  <g id="_マーク位置" data-name="マーク位置">
+    <rect class="cls-1" x="15.72" y="220.65" width="52.55" height="52.55"/>
+  </g>
+
+  <!-- 年表示 -->
+  <g id="_年表示" data-name="年表示">
+    <text id="yearText" class="cls-5" transform="translate(246.85 27.04)">
+      <tspan x="0" y="0">202</tspan>
+      <tspan class="cls-10" x="41.91" y="0">6</tspan>
+      <tspan x="64.26" y="0">年</tspan>
+    </text>
+  </g>
+
+  <!-- 月表示 -->
+  <g id="_月表示" data-name="月表示">
+    <text id="monthText" class="cls-4" transform="translate(268.41 109.39)">
+      <tspan x="0" y="0">1</tspan>
+      <tspan class="cls-10" x="9.95" y="0">1</tspan>
+      <tspan x="26.15" y="0">月</tspan>
+    </text>
+  </g>
+</svg>
+</template>
+
+<script>
+(() => {
+  "use strict";
+
+// 日記データ
+window.diaryRecords = {};
+
+  // 最古の表示月
+  const FIRST_YEAR = 2026;
+  const FIRST_MONTH = 11;
+
+  // 現在の月
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+
+  // 表示できる最終月（翌月）
+  let lastDate = new Date(currentYear, currentMonth, 1);
+  const firstDate = new Date(FIRST_YEAR, FIRST_MONTH - 1, 1);
+  if (lastDate < firstDate) {
+    lastDate = firstDate;
+  }
+  const lastYear = lastDate.getFullYear();
+  const lastMonth = lastDate.getMonth() + 1;
+
+  function monthNumber(year, month) {
+    return year * 12 + month - 1;
+  }
+
+  const firstNumber = monthNumber(FIRST_YEAR, FIRST_MONTH);
+  const lastNumber = monthNumber(lastYear, lastMonth);
+
+  const months = [];
+  for (let n = firstNumber; n <= lastNumber; n++) {
+    const year = Math.floor(n / 12);
+    const month = (n % 12) + 1;
+    months.push({ year, month });
+  }
+
+  const monthSelect = document.getElementById("monthSelect");
+  months.forEach(({ year, month }) => {
+    const option = document.createElement("option");
+    option.value = `${year}-${String(month).padStart(2, "0")}`;
+    option.textContent = `${year}年${month}月`;
+    monthSelect.appendChild(option);
+  });
+
+  const SVG_NS = "http://www.w3.org/2000/svg";
+
+  function createSvgElement(name, attributes = {}) {
+    const element = document.createElementNS(SVG_NS, name);
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+    return element;
+  }
+
+  function createCalendar(year, month) {
+    const template = document.getElementById("calendarTemplate");
+    const svg = template.content.querySelector("svg").cloneNode(true);
+    const firstDay = new Date(year, month - 1, 1).getDay();
+    const daysInMonth = new Date(year, month, 0).getDate();
+
+    svg.querySelector("#yearText").textContent = `${year}年`;
+    svg.querySelector("#monthText").textContent = `${month}月`;
+
+    svg.querySelectorAll("#_曜日文字_固定_ text").forEach(text => {
+      text.style.fontFamily = '"Zen Maru Gothic", sans-serif';
+    });
+
+    svg.querySelector("#_文字日記マーク").replaceChildren();
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const index = firstDay + day - 1;
+      const column = index % 7;
+      const row = Math.floor(index / 7);
+
+      const cellX = column * 83.99;
+      const cellY = 183.37 + row * 98.29;
+
+      const dateKey = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const record = window.diaryRecords[dateKey];
+
+      const dateText = createSvgElement("text", {
+        x: cellX + 33.34 + 17.32 / 2,
+        y: cellY + 191.48 - 183.37 + 17.32 / 2,
+        class: "date-number"
+      });
+      dateText.textContent = day;
+
+      if (column === 0) dateText.classList.add("sunday");
+      if (column === 6) dateText.classList.add("saturday");
+
+      if (record && record.emotionImage) {
+        const image = createSvgElement("image", {
+          x: cellX + 15.72,
+          y: cellY + 220.65 - 183.37,
+          width: 52.55,
+          height: 52.55,
+          href: record.emotionImage,
+          class: "emotion-image",
+          preserveAspectRatio: "xMidYMid meet"
+        });
+        svg.appendChild(image);
+      }
+
+      if (record && record.text && record.text.trim() !== "") {
+        const mark = createSvgElement("path", {
+          d: "M50.78,200.09c.23,6.76-6.93,9.14-11.63,8.01-.23-.07-.46-.16-.68-.24-3.35-1.32-5.67-4.17-5.67-7.48,0-3.94,3.29-7.24,7.7-8.06.23-.04.47-.08.71-.11,6.22-.86,10.99.33,9.72,7.26-.03.21-.09.42-.16.62Z",
+          fill: "#adc885",
+          transform: `translate(${cellX},${cellY - 183.37})`,
+          class: "text-mark"
+        });
+        svg.appendChild(mark);
+      }
+
+      svg.appendChild(dateText);
+    }
+    return svg;
+  }
+
+  const calendarList = document.getElementById("calendarList");
+  months.forEach(({ year, month }) => {
+    const section = document.createElement("section");
+    section.className = "month-calendar";
+    section.dataset.month = `${year}-${String(month).padStart(2, "0")}`;
+    section.appendChild(createCalendar(year, month));
+    calendarList.appendChild(section);
+  });
+
+  function updateHeader(year, month) {
+    document.getElementById("headerMonthText").textContent = `${year}.${String(month).padStart(2, "0")}`;
+  }
+
+  monthSelect.addEventListener("change", () => {
+    const [year, month] = monthSelect.value.split("-").map(Number);
+    updateHeader(year, month);
+    const target = document.querySelector(`.month-calendar[data-month="${monthSelect.value}"]`);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  const initialYear = currentYear;
+  const initialMonth = currentMonth;
+  monthSelect.value = `${initialYear}-${String(initialMonth).padStart(2, "0")}`;
+  updateHeader(initialYear, initialMonth);
+
+  window.addEventListener("load", () => {
+    const currentSection = document.querySelector(`.month-calendar[data-month="${monthSelect.value}"]`);
+    if (currentSection) {
+      currentSection.scrollIntoView({ block: "start" });
+    }
+  });
+
+  // メニュークリックイベント
+  const menuBtn = document.getElementById("_メニュー");
+  if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+      if (typeof window.openMenu === "function") {
+        window.openMenu();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
